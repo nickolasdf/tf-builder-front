@@ -21,10 +21,14 @@ export const prepareTemplateData = (template) => {
         convertedVariables[field.label] = field.value
     })
 
-    return {
+    return [{
+        "path": "https://github.com/zhhuta/iac-patterns-antipatterns.git//path/sql.tf",
+        "commit_message": "CLOUD-2222: boom boom ",
         templates: [{
             name: template.name,
+
             variables: convertedVariables
         }]
-    }
+    }]
+    
 };
