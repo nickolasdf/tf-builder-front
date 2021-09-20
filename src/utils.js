@@ -8,7 +8,8 @@ export const convertTemplateData = (template) => {
 
             return {
                 label: key,
-                value: value.default ?? ''
+                value: value.default ?? '',
+                type: value.type
             }
         })
     }
@@ -18,17 +19,24 @@ export const prepareTemplateData = (template) => {
     const convertedVariables = {};
 
     template.fields.forEach(field => {
-        convertedVariables[field.label] = field.value
+        convertedVariables[field.label] = parseInputValueByType(field.value, field.type);
     })
 
     return [{
-        "path": "https://github.com/zhhuta/iac-patterns-antipatterns.git//path/sql.tf",
-        "commit_message": "CLOUD-2222: boom boom ",
+        path: template?.staticFields?.path,
+        commit_message: template?.staticFields?.commit_message,
         templates: [{
             name: template.name,
-
             variables: convertedVariables
         }]
     }]
-    
+};
+
+const parseInputValueByType = (value, type) => {
+    switch (type) {
+        case 'array':
+            return value?.split(',')
+        default:
+            return value;
+    }
 };

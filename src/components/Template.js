@@ -4,18 +4,30 @@ import * as api from '../api';
 import "./Template.css";
 import {prepareTemplateData} from "../utils";
 
+const initialTemplate = {
+    fields: [],
+    staticFields: {
+        path: '',
+        commit_message: ''
+    },
+    name: '',
+};
+
 const Template = ({ data }) => {
     const history = useHistory();
-    const [template, setTemplate] = useState({ fields: [], name: '' });
+    const [template, setTemplate] = useState(initialTemplate);
     const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
         if(data) {
-            setTemplate(data);
+            setTemplate({
+                ...initialTemplate,
+                ...data,
+            });
         }
     }, [data]);
 
-    const handleChangeField = (index) => (event) => {
+    const handleChangeDynamicField = (index) => (event) => {
         const { value } = event.target;
         template.fields[index].value = value;
 
@@ -23,6 +35,18 @@ const Template = ({ data }) => {
             ...template,
             fields: template.fields
         });
+    };
+
+    const handleChangeStaticField = (event) => {
+        const { value, name } = event.target;
+
+        setTemplate({
+            ...template,
+            staticFields: {
+                ...template.staticFields,
+                [name]: value
+            }
+        })
     };
 
     const handleClickCancel = () => {
@@ -45,6 +69,24 @@ const Template = ({ data }) => {
         <div>
             <h3 className='template-title'>{template.name}</h3>
             <form onSubmit={handleSubmit}>
+                <div className='template-form-row'>
+                    <div className='template-label-section'>
+                        <span>Path</span>
+                    </div>
+
+                    <div className='template-input-section'>
+                        <input onChange={handleChangeStaticField} name='path' className="template-input" />
+                    </div>
+                </div>
+                <div className='template-form-row'>
+                    <div className='template-label-section'>
+                        <span>Commit message</span>
+                    </div>
+
+                    <div className='template-input-section'>
+                        <input onChange={handleChangeStaticField} name='commit_message' className="template-input" />
+                    </div>
+                </div>
                 {template.fields.map((field, index) => {
                     return (
                         <div key={field.label} className='template-form-row'>
@@ -53,13 +95,13 @@ const Template = ({ data }) => {
                             </div>
 
                             <div className='template-input-section'>
-                                <input onChange={handleChangeField(index)} name={field.label} className="template-input" />
+                                <input onChange={handleChangeDynamicField(index)} name={field.label} className="template-input" />
                             </div>
                         </div>
                     )
                 })}
                 <div className='template-actions'>
-                    <button type='submit'>Submit</button>
+                    <button type='submit' disabled={submitting}>Submit</button>
                     <button type='button' onClick={handleClickCancel}>Cancel</button>
                 </div>
             </form>

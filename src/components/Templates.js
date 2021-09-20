@@ -3,12 +3,6 @@ import './Templates.css';
 import {NavLink} from "react-router-dom";
 import * as api from '../api';
 
-const mockTemplates = [
-    'bucket',
-    'cloudsql',
-    'test'
-]
-
 const Templates = () => {
     const [templates, setTemplates] = useState([]);
 

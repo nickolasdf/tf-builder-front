@@ -17,6 +17,8 @@ const TemplateContainer = () => {
                 setTemplate(convertTemplateData(resp.data));
             }).finally(() => setLoading(false))
         }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [params.template]);
 
     const templateComponent = template && <Template data={template} />;
