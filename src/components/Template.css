@@ -34,3 +34,27 @@
 .template-actions {
     margin: 16px -8px;
 }
+.message-box {
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    margin-top: 60px;
+}
+
+.message-box span {
+    line-height: 24px;
+}
+
+.message-box img {
+    margin-right: 16px;
+}
+
+.message-box--success {
+    border: 1px solid #00cb00;
+    background-color: #ceffce;
+}
+
+.message-box--error {
+    border: 1px solid #cb0000;
+    background-color: #ffcece;
+}

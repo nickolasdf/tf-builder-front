@@ -1,8 +1,10 @@
 import {useEffect, useState} from 'react';
 import { useHistory } from "react-router-dom";
 import * as api from '../api';
-import "./Template.css";
 import {prepareTemplateData} from "../utils";
+import checkedIcon from '../assets/icons/checked.svg';
+import infoIcon from '../assets/icons/info.svg';
+import "./Template.css";
 
 const initialTemplate = {
     fields: [],
@@ -17,6 +19,8 @@ const Template = ({ data }) => {
     const history = useHistory();
     const [template, setTemplate] = useState(initialTemplate);
     const [submitting, setSubmitting] = useState(false);
+    const [successMessage, setSuccessMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
 
     useEffect(() => {
         if(data) {
@@ -60,9 +64,30 @@ const Template = ({ data }) => {
 
         api.Templates.send(prepareTemplateData(template))
             .then((resp) => {
-                history.push('/');
+                const [data] = resp.data;
+
+                setSuccessMessage(`Success! Branch has been created ${data.branch}`);
             })
-            .catch(() => setSubmitting(false))
+            .catch(() => {
+                setErrorMessage('Sorry. You need to correct the fields marked below before continuing');
+            })
+            .finally(() => setSubmitting(false))
+    };
+
+    const renderMessage = () => {
+        if(successMessage) {
+            return <div className='message-box message-box--success'>
+                <img width='24' height='24' alt='checked icon' src={checkedIcon}/>
+                <span>{successMessage}</span>
+            </div>
+        } else if(errorMessage) {
+            return <div className='message-box message-box--error'>
+                <img width='24' height='24' alt='info icon' src={infoIcon}/>
+                <span>{errorMessage}</span>
+            </div>
+        } else {
+            return null;
+        }
     };
 
     return (
@@ -105,6 +130,7 @@ const Template = ({ data }) => {
                     <button type='button' onClick={handleClickCancel}>Cancel</button>
                 </div>
             </form>
+            {renderMessage()}
         </div>
     )
 };
