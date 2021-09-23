@@ -38,11 +38,14 @@
     padding: 8px 16px;
     display: flex;
     align-items: center;
-    margin-top: 60px;
 }
 
 .message-box span {
     line-height: 24px;
+}
+
+.message-box a {
+    word-break: break-all;
 }
 
 .message-box img {

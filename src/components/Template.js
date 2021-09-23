@@ -19,7 +19,7 @@ const Template = ({ data }) => {
     const history = useHistory();
     const [template, setTemplate] = useState(initialTemplate);
     const [submitting, setSubmitting] = useState(false);
-    const [successMessage, setSuccessMessage] = useState('');
+    const [successData, setSuccessData] = useState(null);
     const [errorMessage, setErrorMessage] = useState('');
 
     useEffect(() => {
@@ -66,7 +66,7 @@ const Template = ({ data }) => {
             .then((resp) => {
                 const [data] = resp.data;
 
-                setSuccessMessage(`Success! Branch has been created ${data.branch}`);
+                setSuccessData(data);
             })
             .catch(() => {
                 setErrorMessage('Sorry. You need to correct the fields marked below before continuing');
@@ -75,10 +75,14 @@ const Template = ({ data }) => {
     };
 
     const renderMessage = () => {
-        if(successMessage) {
+        if(successData) {
             return <div className='message-box message-box--success'>
                 <img width='24' height='24' alt='checked icon' src={checkedIcon}/>
-                <span>{successMessage}</span>
+                <div>
+                    <span>Success! Branch has been created</span>
+                    {' '}
+                    <a href={successData.pr_html_url}>{successData.pr_html_url}</a>
+                </div>
             </div>
         } else if(errorMessage) {
             return <div className='message-box message-box--error'>
